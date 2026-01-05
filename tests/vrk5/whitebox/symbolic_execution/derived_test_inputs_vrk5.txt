@@ -1,0 +1,5 @@
+P1 -> amount=0, simulate=''
+P2 -> amount=100, simulate='timeout'
+P3 -> amount=100, simulate='insufficient'
+P4 -> amount=100, simulate='fraud'
+P5 -> amount=100, simulate=''
