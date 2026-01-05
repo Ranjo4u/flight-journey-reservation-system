@@ -1,0 +1,6 @@
+# State Transition (Black-box)
+# Booking states: PENDING -> PAID, PENDING -> CANCELLED, PAID -> CANCELLED
+
+ST-01 | Create booking | status=PENDING |  | 
+ST-02 | Pay booking | status=PAID |  | 
+ST-03 | Cancel booking | status=CANCELLED |  | 
