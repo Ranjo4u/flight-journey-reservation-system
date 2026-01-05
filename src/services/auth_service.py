@@ -2,7 +2,7 @@ import hashlib
 from typing import Dict, Optional, Tuple
 
 from src.config import CONFIG
-from src.constants import ROLE_ADMIN, ROLE_TRAVELLER
+from src.constants import ROLE_TRAVELLER
 from src.persistence.jsonl_repository import append_jsonl, find_one, update_one
 from src.persistence.audit_logger import log_event
 from src.utils.validators import validate_email, validate_password
@@ -11,19 +11,16 @@ def _hash_password(password: str, salt: str) -> str:
     raw = (salt + password).encode("utf-8")
     return hashlib.sha256(raw).hexdigest()
 
-def register(email: str, password: str, role: str = ROLE_TRAVELLER) -> Tuple[bool, str]:
+def register(email: str, password: str) -> Tuple[bool, str]:
     ok, msg = validate_email(email)
     if not ok:
         return False, msg
-
     ok, msg = validate_password(password)
     if not ok:
         return False, msg
 
     email = email.strip().lower()
-    role = role.strip().lower()
-    if role not in (ROLE_TRAVELLER, ROLE_ADMIN):
-        role = ROLE_TRAVELLER
+    role = ROLE_TRAVELLER  # travellers only; admin is seeded
 
     users_path = f"{CONFIG.data_dir}/{CONFIG.users_file}"
     if find_one(users_path, "email", email):

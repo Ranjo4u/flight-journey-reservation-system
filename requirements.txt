@@ -1,1 +1,2 @@
-# No external dependencies required
+# No external dependencies required for running the app.
+# Tests use pytest: pip install pytest

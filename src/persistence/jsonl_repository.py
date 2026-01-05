@@ -24,10 +24,8 @@ def read_jsonl(path: str) -> List[Dict[str, Any]]:
                 obj = json.loads(line)
                 if isinstance(obj, dict):
                     rows.append(obj)
-                else:
-                    raise RepositoryError("JSONL row must be an object")
             except json.JSONDecodeError:
-                # Graceful handling of corrupted lines
+                # Skip corrupted lines
                 continue
     return rows
 
@@ -53,8 +51,7 @@ def update_one(path: str, key: str, value: Any, patch: Dict[str, Any]) -> bool:
     updated = False
     for r in rows:
         if r.get(key) == value and not updated:
-            for k, v in patch.items():
-                r[k] = v
+            r.update(patch)
             updated = True
     if updated:
         overwrite_jsonl(path, rows)

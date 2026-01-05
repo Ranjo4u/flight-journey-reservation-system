@@ -1,0 +1,6 @@
+# Boundary Value Analysis (Black-box)
+# Focus: passengers, price, seats
+
+BVA-01 | passengers=1 | Booking created (PENDING) |  | 
+BVA-02 | passengers=0 | Passengers must be at least 1 |  | 
+BVA-03 | max_price=1 | likely no flights found OR valid filtering |  | 

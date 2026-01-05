@@ -26,9 +26,3 @@ def prompt_int(prompt: str, default: Optional[int] = None, min_value: Optional[i
             print(f"Value must be <= {max_value}.")
             continue
         return val
-
-def prompt_yes_no(prompt: str, default: bool = False) -> bool:
-    raw = input(prompt + (" [Y/n]: " if default else " [y/N]: ")).strip().lower()
-    if not raw:
-        return default
-    return raw in ("y", "yes")

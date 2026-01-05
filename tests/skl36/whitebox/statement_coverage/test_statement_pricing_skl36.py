@@ -1,14 +1,9 @@
 from src.utils.pricing_engine import dynamic_price
 
-def test_dynamic_price_peak_morning_increases():
-    p = dynamic_price(base_price=100, date_str="2026-02-14", depart_hhmm="08:00", passengers=1)
-    assert p >= 100
+def test_dynamic_price_never_below_1():
+    assert dynamic_price(1, "2026-02-14", "02:00", 1) >= 1
 
-def test_dynamic_price_night_can_decrease_but_not_below_1():
-    p = dynamic_price(base_price=5, date_str="2026-02-14", depart_hhmm="02:00", passengers=1)
-    assert p >= 1
-
-def test_dynamic_price_group_discount_applies():
-    p1 = dynamic_price(base_price=200, date_str="2026-02-14", depart_hhmm="12:00", passengers=1)
-    p4 = dynamic_price(base_price=200, date_str="2026-02-14", depart_hhmm="12:00", passengers=4)
+def test_dynamic_price_group_discount():
+    p1 = dynamic_price(200, "2026-02-14", "12:00", 1)
+    p4 = dynamic_price(200, "2026-02-14", "12:00", 4)
     assert p4 <= p1

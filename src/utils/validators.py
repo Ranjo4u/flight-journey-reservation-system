@@ -3,6 +3,7 @@ from typing import Tuple
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 AIRPORT_RE = re.compile(r"^[A-Z]{3}$")
+TIME_RE = re.compile(r"^(?:[01]\d|2[0-3]):[0-5]\d$")
 
 def validate_email(email: str) -> Tuple[bool, str]:
     email = (email or "").strip().lower()
@@ -48,6 +49,14 @@ def validate_date_yyyy_mm_dd(date_str: str) -> Tuple[bool, str]:
         return False, "Month out of range."
     if di < 1 or di > 31:
         return False, "Day out of range."
+    return True, ""
+
+def validate_time_hhmm(t: str) -> Tuple[bool, str]:
+    t = (t or "").strip()
+    if not t:
+        return False, "Time is required."
+    if not TIME_RE.match(t):
+        return False, "Time must be HH:MM (24h)."
     return True, ""
 
 def validate_seat(seat_no: str) -> Tuple[bool, str]:

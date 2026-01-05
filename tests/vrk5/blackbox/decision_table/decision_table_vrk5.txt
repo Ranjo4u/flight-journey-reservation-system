@@ -1,0 +1,7 @@
+# Decision Table (Black-box)
+# Payment outcomes
+
+DT-01 | simulate='' | success, booking PAID |  | 
+DT-02 | simulate='timeout' | fail, booking PENDING |  | 
+DT-03 | simulate='insufficient' | fail, booking PENDING |  | 
+DT-04 | simulate='fraud' | fail, booking PENDING |  | 

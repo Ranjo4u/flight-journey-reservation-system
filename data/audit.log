@@ -1,0 +1,4 @@
+2026-01-05 11:01:52 | SEED_ADMIN | email=admin@group7.com
+2026-01-05 11:01:52 | SEED_USERS | count=10
+2026-01-05 11:01:52 | SEED_FLIGHTS | count=70
+2026-01-05 11:02:00 | LOGIN_OK | email=admin@group7.com

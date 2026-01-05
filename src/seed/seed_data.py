@@ -1,33 +1,104 @@
+import random
+import hashlib
+from datetime import date, timedelta
+
 from src.config import CONFIG
-from src.persistence.jsonl_repository import read_jsonl, append_jsonl
+from src.persistence.jsonl_repository import read_jsonl, append_jsonl, find_one
 from src.persistence.audit_logger import log_event
+
+def _hash_password(password: str, salt: str) -> str:
+    raw = (salt + password).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
 
 def seed_if_empty() -> None:
     flights_path = f"{CONFIG.data_dir}/{CONFIG.flights_file}"
-    rows = read_jsonl(flights_path)
-    if rows:
+    users_path = f"{CONFIG.data_dir}/{CONFIG.users_file}"
+
+    # 1) Seed Admin (only once)
+    admin_email = "admin@group7.com"
+    if not find_one(users_path, "email", admin_email):
+        salt = hashlib.md5(admin_email.encode("utf-8")).hexdigest()[:8]
+        pw_hash = _hash_password("Admin1234", salt)
+        append_jsonl(users_path, {
+            "email": admin_email,
+            "role": "admin",
+            "salt": salt,
+            "pw_hash": pw_hash,
+            "failed_attempts": 0,
+            "locked": False
+        })
+        log_event("SEED_ADMIN", f"email={admin_email}")
+
+    # 2) Seed 10 traveller users (only if few users exist)
+    if len(read_jsonl(users_path)) < 5:
+        for i in range(1, 11):
+            email = f"user{i}@demo.com"
+            if find_one(users_path, "email", email):
+                continue
+            salt = hashlib.md5(email.encode("utf-8")).hexdigest()[:8]
+            pw_hash = _hash_password("User1234", salt)
+            append_jsonl(users_path, {
+                "email": email,
+                "role": "traveller",
+                "salt": salt,
+                "pw_hash": pw_hash,
+                "failed_attempts": 0,
+                "locked": False
+            })
+        log_event("SEED_USERS", "count=10")
+
+    # 3) Seed flights (only if empty)
+    if read_jsonl(flights_path):
         return
 
-    sample = [
-        {
-            "flight_id": "F1001", "from": "LHR", "to": "JFK", "date": "2026-02-14",
-            "airline": "BRITJET", "depart": "10:30", "arrive": "13:10",
-            "seats_total": 10, "seats_left": 10, "base_price": 420
-        },
-        {
-            "flight_id": "F1002", "from": "LGW", "to": "CDG", "date": "2026-02-14",
-            "airline": "EUROAIR", "depart": "08:00", "arrive": "10:20",
-            "seats_total": 12, "seats_left": 12, "base_price": 90
-        },
-        {
-            "flight_id": "F1003", "from": "MAN", "to": "DXB", "date": "2026-03-01",
-            "airline": "SKYWAYS", "depart": "21:00", "arrive": "07:40",
-            "seats_total": 8, "seats_left": 8, "base_price": 310
-        }
-    ]
-    for f in sample:
-        append_jsonl(flights_path, f)
+    airports = ["LHR", "LGW", "MAN", "BHX", "EDI", "GLA"]
+    destinations = ["JFK", "DXB", "CDG", "AMS", "DEL", "SIN"]
+    airlines = ["BRITJET", "EUROAIR", "SKYWAYS", "GLOBALFLY", "AEROX"]
 
-    # Optional: seed one admin user (comment out if you don't want it)
-    # You can register admin via CLI too.
-    log_event("SEED_FLIGHTS", "inserted=3")
+    base_prices = {
+        "JFK": (350, 650),
+        "DXB": (300, 600),
+        "DEL": (280, 550),
+        "SIN": (400, 700),
+        "CDG": (80, 180),
+        "AMS": (90, 200)
+    }
+
+    today = date.today()
+    flight_count = 0
+
+    for i in range(1, 71):  # 70 flights
+        origin = random.choice(airports)
+        dest = random.choice(destinations)
+        if origin == dest:
+            continue
+
+        days_ahead = random.randint(1, 120)
+        flight_date = today + timedelta(days=days_ahead)
+
+        airline = random.choice(airlines)
+        seats_total = random.choice([120, 150, 180, 200])
+        seats_left = random.randint(40, seats_total)
+
+        price_min, price_max = base_prices[dest]
+        base_price = random.randint(price_min, price_max)
+
+        depart_hour = random.choice(["06", "09", "12", "15", "18", "21"])
+        arrive_hour = str((int(depart_hour) + random.randint(2, 8)) % 24).zfill(2)
+
+        flight = {
+            "flight_id": f"F{1000 + i}",
+            "from": origin,
+            "to": dest,
+            "date": flight_date.isoformat(),
+            "airline": airline,
+            "depart": f"{depart_hour}:00",
+            "arrive": f"{arrive_hour}:30",
+            "seats_total": seats_total,
+            "seats_left": seats_left,
+            "base_price": base_price
+        }
+        append_jsonl(flights_path, flight)
+        flight_count += 1
+
+    log_event("SEED_FLIGHTS", f"count={flight_count}")

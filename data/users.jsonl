@@ -1,0 +1,11 @@
+{"email": "admin@group7.com", "role": "admin", "salt": "ecccc3b9", "pw_hash": "d7f652aade5deb8ac30245d00088d8f08a2d2e383d5a5863d653ea5c836bc601", "failed_attempts": 0, "locked": false}
+{"email": "user1@demo.com", "role": "traveller", "salt": "d10763b3", "pw_hash": "b573df6e2e52a2c36f48829bcd5ee146b6b7a98d0c453241c9b731db36b05a5d", "failed_attempts": 0, "locked": false}
+{"email": "user2@demo.com", "role": "traveller", "salt": "61eadc63", "pw_hash": "8139de4353875f3fdb3fa41383e33ffafa1d05d2321cd3e5cc801f2348486054", "failed_attempts": 0, "locked": false}
+{"email": "user3@demo.com", "role": "traveller", "salt": "882bfc1f", "pw_hash": "28b07fd8b70e101bec14e59fea306ad508932fdcf6e4ed22ebb3cd3a5fb961a6", "failed_attempts": 0, "locked": false}
+{"email": "user4@demo.com", "role": "traveller", "salt": "02a4e354", "pw_hash": "161f50026015753c90ac386356e33ffcc8f31d2666544f4f7139a0981520e6d5", "failed_attempts": 0, "locked": false}
+{"email": "user5@demo.com", "role": "traveller", "salt": "e62deaf2", "pw_hash": "36a9fc09261eaaa3119550377f934f19ea267f93c6f285e1612ee06a7e2d84c4", "failed_attempts": 0, "locked": false}
+{"email": "user6@demo.com", "role": "traveller", "salt": "1255d863", "pw_hash": "b38f1b77fc21284aba2b8e41ba5d0a69ddca1a526a2e1610ab4692a2803482f4", "failed_attempts": 0, "locked": false}
+{"email": "user7@demo.com", "role": "traveller", "salt": "9c07b93d", "pw_hash": "91e62ddff998b77a0d076b0613108fb15683f7bb6c06b2656e1a3207b2fa8d42", "failed_attempts": 0, "locked": false}
+{"email": "user8@demo.com", "role": "traveller", "salt": "dbd13566", "pw_hash": "cbbd676c34d06504c70846db9a331cc139467f465ace12bc3ab17dbdb432fee1", "failed_attempts": 0, "locked": false}
+{"email": "user9@demo.com", "role": "traveller", "salt": "30c9b679", "pw_hash": "50651a39700057540ad2079ead439505089aa6d28d7d171157901581d79d6237", "failed_attempts": 0, "locked": false}
+{"email": "user10@demo.com", "role": "traveller", "salt": "720a1adf", "pw_hash": "379ae9524921908d357f0beb6d4173b05a642c78587ba673a40262a9ef3c44f3", "failed_attempts": 0, "locked": false}

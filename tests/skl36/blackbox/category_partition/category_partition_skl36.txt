@@ -1,0 +1,7 @@
+# Category Partition Tests (Black-box)
+# TestID | Inputs | Expected Output | Actual Output | Pass/Fail
+
+CP-01 | Register valid email + valid password | Registration successful |  | 
+CP-02 | Register invalid email | Invalid email format |  | 
+CP-03 | Login correct password | Login successful |  | 
+CP-04 | Login wrong password | Invalid password |  | 

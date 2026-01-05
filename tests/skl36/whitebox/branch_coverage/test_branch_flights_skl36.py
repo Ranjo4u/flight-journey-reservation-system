@@ -1,13 +1,13 @@
 from src.seed.seed_data import seed_if_empty
 from src.services.flight_service import list_all_flights, search_flights
 
-def test_seed_creates_flights_and_search_finds_matches():
+def test_seed_then_list_and_search():
     seed_if_empty()
     flights = list_all_flights()
-    assert len(flights) >= 3
+    assert len(flights) >= 50
 
-    ok, msg, results = search_flights(origin="LHR", dest="JFK", date_str="2026-02-14", airline="", max_price=999999)
+    f0 = flights[0]
+    ok, msg, results = search_flights(f0["from"], f0["to"], f0["date"], airline="", max_price=999999)
     assert ok, msg
-    assert len(results) >= 1
-    assert results[0]["from"] == "LHR"
-    assert results[0]["to"] == "JFK"
+    # might be multiple, but at least one should match
+    assert any(r["flight_id"] == f0["flight_id"] for r in results)

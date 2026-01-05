@@ -11,7 +11,7 @@ def run_user_panel(session: Dict[str, Any]) -> None:
     while True:
         print("\n=== USER PANEL ===")
         print("1. Search flights")
-        print("2. View flight details (list all)")
+        print("2. View all flights")
         print("3. Create booking")
         print("4. Pay for booking")
         print("5. View my bookings")
