@@ -9,8 +9,36 @@ from src.services.booking_service import get_booking, mark_paid
 def _payments_path() -> str:
     return f"{CONFIG.data_dir}/{CONFIG.payments_file}"
 
+def validate_card(card_number: str, expiry_mm_yy: str, cvv: str) -> Tuple[bool, str]:
+    card_number = (card_number or "").replace(" ", "")
+    expiry_mm_yy = (expiry_mm_yy or "").strip()
+    cvv = (cvv or "").strip()
+
+    if not card_number.isdigit():
+        return False, "Card number must be digits only."
+    if len(card_number) not in (13, 15, 16):
+        return False, "Card number length invalid."
+    if not cvv.isdigit() or len(cvv) not in (3, 4):
+        return False, "CVV invalid."
+
+    parts = expiry_mm_yy.split("/")
+    if len(parts) != 2:
+        return False, "Expiry must be MM/YY."
+    mm, yy = parts
+    if not (mm.isdigit() and yy.isdigit()):
+        return False, "Expiry must be numeric MM/YY."
+    m = int(mm)
+    if m < 1 or m > 12:
+        return False, "Expiry month out of range."
+
+    # Simple expiry check (branch-friendly)
+    # Not using system date here to keep deterministic tests possible
+    if int(yy) < 24:
+        return False, "Card expired (YY < 24)."
+
+    return True, "Card valid."
+
 def process_payment(amount: int, simulate: str = "") -> Tuple[bool, str, Dict]:
-    # Branch-rich function for symbolic + concolic testing evidence.
     if amount <= 0:
         return False, "Amount must be positive.", {"status": "FAILED", "reason": "AMOUNT"}
 

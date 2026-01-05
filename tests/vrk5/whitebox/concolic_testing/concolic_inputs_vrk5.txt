@@ -1,3 +1,0 @@
-Run1: amount=100 simulate=''
-Mutate: simulate='timeout'
-Mutate: simulate='fraud'

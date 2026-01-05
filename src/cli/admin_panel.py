@@ -33,7 +33,6 @@ def run_admin_panel(session: Dict[str, Any]) -> None:
             arrive = prompt_non_empty("Arrive (HH:MM): ")
             seats_total = prompt_int("Seats total: ", min_value=1, max_value=500)
             base_price = prompt_int("Base price: ", min_value=1, max_value=100000)
-
             ok, msg = admin_add_flight({
                 "flight_id": flight_id,
                 "from": origin,
@@ -53,31 +52,24 @@ def run_admin_panel(session: Dict[str, Any]) -> None:
             flight_id = prompt_non_empty("Flight ID: ").upper()
             print("Enter fields to update (leave blank to skip).")
             patch = {}
-
             new_price = prompt_optional("New base price: ")
             if new_price.isdigit():
                 patch["base_price"] = int(new_price)
-
             new_left = prompt_optional("New seats left: ")
             if new_left.isdigit():
                 patch["seats_left"] = int(new_left)
-
             new_depart = prompt_optional("New depart time (HH:MM): ")
             if new_depart:
                 patch["depart"] = new_depart
-
             new_arrive = prompt_optional("New arrive time (HH:MM): ")
             if new_arrive:
                 patch["arrive"] = new_arrive
-
             new_airline = prompt_optional("New airline: ")
             if new_airline:
                 patch["airline"] = new_airline.upper()
-
             if not patch:
                 print("No updates provided.")
                 continue
-
             ok, msg = admin_update_flight(flight_id=flight_id, patch=patch)
             print(msg)
             continue

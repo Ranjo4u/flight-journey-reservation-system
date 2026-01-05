@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Tuple
 from src.config import CONFIG
 from src.persistence.jsonl_repository import read_jsonl, append_jsonl, update_one, delete_one
 from src.persistence.audit_logger import log_event
-from src.utils.validators import validate_airport, validate_date_yyyy_mm_dd, validate_time_hhmm
+from src.utils.validators import validate_airport, validate_date_yyyy_mm_dd
 
 def list_all_flights() -> List[Dict[str, Any]]:
     flights_path = f"{CONFIG.data_dir}/{CONFIG.flights_file}"
@@ -52,6 +52,7 @@ def search_flights(origin: str, dest: str, date_str: str, airline: str = "", max
 
     if not results:
         return True, "No matching flights found.", []
+
     return True, f"Found {len(results)} flights.", results
 
 def admin_add_flight(flight: Dict[str, Any]) -> Tuple[bool, str]:
@@ -59,22 +60,6 @@ def admin_add_flight(flight: Dict[str, Any]) -> Tuple[bool, str]:
     for k in required:
         if k not in flight:
             return False, f"Missing field: {k}"
-
-    ok, msg = validate_airport(str(flight["from"]))
-    if not ok:
-        return False, msg
-    ok, msg = validate_airport(str(flight["to"]))
-    if not ok:
-        return False, msg
-    ok, msg = validate_date_yyyy_mm_dd(str(flight["date"]))
-    if not ok:
-        return False, msg
-    ok, msg = validate_time_hhmm(str(flight["depart"]))
-    if not ok:
-        return False, msg
-    ok, msg = validate_time_hhmm(str(flight["arrive"]))
-    if not ok:
-        return False, msg
 
     flights_path = f"{CONFIG.data_dir}/{CONFIG.flights_file}"
     for existing in read_jsonl(flights_path):

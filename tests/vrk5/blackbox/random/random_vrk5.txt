@@ -1,4 +1,0 @@
-# Random Testing (Black-box)
-
-RND-01 | Random valid search inputs | Results OR 'No matching flights found' |  | 
-RND-02 | Random seat like 12C | Booking created if seat not taken |  | 

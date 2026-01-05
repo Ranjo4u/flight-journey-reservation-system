@@ -1,8 +1,8 @@
 def dynamic_price(base_price: int, date_str: str, depart_hhmm: str, passengers: int) -> int:
-    # Branch-heavy pricing for white-box + symbolic demonstrations.
+    # Branch-heavy pricing, suitable for white-box and symbolic testing demonstrations
     price = int(base_price)
 
-    # Peak hours adjustment
+    # Peak hours
     if depart_hhmm and ":" in depart_hhmm:
         h = int(depart_hhmm.split(":")[0])
         if 6 <= h <= 9:
@@ -11,16 +11,20 @@ def dynamic_price(base_price: int, date_str: str, depart_hhmm: str, passengers: 
             price += 35
         elif 0 <= h <= 5:
             price -= 10
+        else:
+            price += 0
 
-    # Simple weekend-ish heuristic based on day-of-month modulo
+    # Simple "weekend-ish" heuristic based on day-of-month modulo
     try:
         day = int(date_str.split("-")[2])
         if day % 7 in (0, 6):
             price += 40
         elif day % 7 in (1, 2):
             price += 10
+        else:
+            price += 0
     except Exception:
-        pass
+        price += 0
 
     # Group discount tiers
     if passengers <= 0:

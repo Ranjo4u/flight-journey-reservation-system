@@ -4,7 +4,7 @@ from src.services.auth_service import register, login, logout
 from src.cli.user_panel import run_user_panel
 from src.cli.admin_panel import run_admin_panel
 from src.seed.seed_data import seed_if_empty
-from src.constants import ROLE_ADMIN
+from src.constants import ROLE_ADMIN, ROLE_TRAVELLER
 
 def run_app() -> None:
     seed_if_empty()
@@ -13,7 +13,7 @@ def run_app() -> None:
 
     while True:
         print("\n=== Group7 Flight Journey Reservation System (CLI) ===")
-        print("1. Register (traveller)")
+        print("1. Register")
         print("2. Login")
         print("0. Exit")
         choice = input("Select option: ").strip()
@@ -25,7 +25,8 @@ def run_app() -> None:
         if choice == "1":
             email = input("Email: ").strip()
             password = input("Password: ").strip()
-            ok, msg = register(email=email, password=password)
+            role = input("Role (traveller/admin) [traveller]: ").strip().lower() or ROLE_TRAVELLER
+            ok, msg = register(email=email, password=password, role=role)
             print(msg)
             continue
 
@@ -42,7 +43,6 @@ def run_app() -> None:
                 run_admin_panel(session)
             else:
                 run_user_panel(session)
-
             logout(session["email"])
             session = None
             continue

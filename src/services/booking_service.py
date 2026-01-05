@@ -21,9 +21,8 @@ def _get_flight(flight_id: str) -> Optional[Dict[str, Any]]:
     return None
 
 def _seat_taken(flight_id: str, seat_no: str) -> bool:
-    # seat is considered taken if there is a PAID booking for same seat and flight
     for b in read_jsonl(_bookings_path()):
-        if b.get("flight_id") == flight_id and b.get("status") == BOOKING_STATUS_PAID:
+        if b.get("flight_id") == flight_id and b.get("status") in (BOOKING_STATUS_PAID,):
             if b.get("seat_no") == seat_no:
                 return True
     return False
@@ -75,6 +74,7 @@ def create_booking(email: str, flight_id: str, passenger_name: str, passengers: 
     }
     append_jsonl(_bookings_path(), booking)
 
+    # update seats_left: subtract passengers (branch-friendly)
     subtract = passengers if passengers > 1 else 1
     new_left = max(seats_left - subtract, 0)
     update_one(_flights_path(), "flight_id", flight_id, {"seats_left": new_left})
@@ -109,6 +109,9 @@ def cancel_booking(email: str, booking_id: str) -> Tuple[bool, str]:
     status = booking.get("status")
     if status == BOOKING_STATUS_CANCELLED:
         return False, "Booking is already cancelled."
+    if status == BOOKING_STATUS_PAID:
+        # allow cancellation but mark cancelled; seat refunds not implemented to keep logic clear
+        pass
 
     ok = update_one(_bookings_path(), "booking_id", booking_id, {"status": BOOKING_STATUS_CANCELLED})
     if ok:
